@@ -20,7 +20,7 @@
 
    <target name="bootstrap"
       description="Create gradle-bootstrap.jar"
-      depends="launcher,core-impl,plugins">
+      depends="launcher,code-quality,core-impl,plugins">
       <pathconvert property="class.path" pathsep=" ">
          <!-- FIXME -->
          <fileset dir="lib" includes="logback*.jar"/>
@@ -56,6 +56,8 @@
             <attribute name="Class-Path" value="${class.path}"/>
          </manifest>
          <fileset dir="output/cli"/>
+         <fileset dir="output/code-quality"/>
+         <fileset dir="../subprojects/code-quality/src/main/resources"/>
          <fileset dir="output/core"/>
          <fileset dir="../subprojects/core/src/main/resources"/>
          <fileset dir="output/core-impl"/>
@@ -86,6 +88,21 @@
          <classpath>
          </classpath>
       </javac>
+   </target>
+
+   <target name="code-quality" depends="core">
+      <mkdir dir="output/code-quality"/>
+      <groovyc srcdir="../subprojects/code-quality/src/main/groovy"
+         destdir="output/code-quality">
+         <classpath>
+            <pathelement path="output/core"/>
+            <!-- FIXME -->
+            <pathelement path="lib/plugins/CodeNarc-0.16.1.jar"/>
+            <pathelement path="/usr/share/java/slf4j/api.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+         </classpath>
+         <javac/>
+      </groovyc>
    </target>
 
    <target name="core" depends="cli,native">
