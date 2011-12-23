@@ -19,7 +19,8 @@ package org.gradle.groovy.scripts.internal;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.Script;
-import groovyjarjarasm.asm.ClassWriter;
+import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.ast.expr.ConstantExpression;
 import org.codehaus.groovy.ast.stmt.ReturnStatement;
@@ -90,7 +91,7 @@ public class DefaultScriptCompilationHandler implements ScriptCompilationHandler
                     // Groovy will only put the filename into the class, but that does not help a debugger for Gradle
                     // because it does not know where Gradle scripts might live.
                     @Override
-                    protected groovyjarjarasm.asm.ClassVisitor createClassVisitor() {
+                    protected ClassVisitor createClassVisitor() {
                         return new ClassWriter(ClassWriter.COMPUTE_MAXS) {
                             // ignore the sourcePath that is given by Groovy (this is only the filename) and instead
                             // insert the full path if our script source has a source file

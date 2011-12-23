@@ -15,7 +15,7 @@
  */
 package org.gradle.build.docs.dsl;
 
-import groovyjarjarantlr.collections.AST;
+import antlr.collections.AST;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.groovy.antlr.GroovySourceAST;
 import org.codehaus.groovy.antlr.LineColumn;

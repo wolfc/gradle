@@ -1,0 +1,243 @@
+<!--
+   vim:ts=3:sw=3:expandtab
+-->
+<project name="gradle-bootstrap" default="bootstrap">
+   <taskdef name="groovyc"
+      classname="org.codehaus.groovy.ant.Groovyc">
+      <classpath>
+         <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
+         <pathelement path="/usr/share/java/groovy.jar"/>
+      </classpath>
+   </taskdef>
+
+   <target name="bootstrap"
+      description="Create gradle-bootstrap.jar"
+      depends="launcher,core-impl,plugins">
+      <pathconvert property="class.path" pathsep=" ">
+         <!-- FIXME -->
+         <fileset dir="lib" includes="logback*.jar"/>
+         <fileset dir="lib" includes="wharf-core*.jar"/>
+
+         <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
+         <path location="/usr/share/java/ant.jar"/>
+         <path location="/usr/share/java/apache-commons-collections.jar"/>
+         <!-- !!! also used in logging any final traces !!! -->
+         <path location="/usr/share/java/apache-commons-lang.jar"/>
+         <path location="/usr/share/java/apache-commons-io.jar"/>
+         <path location="/usr/share/java/groovy.jar"/>
+         <path location="/usr/share/java/guava.jar"/>
+         <path location="/usr/share/java/jaffl.jar"/>
+         <path location="/usr/share/java/jakarta-commons-httpclient.jar"/>
+         <path location="/usr/share/java/jansi.jar"/>
+         <path location="/usr/share/java/jnr-posix.jar"/>
+         <path location="/usr/share/java/maven2/maven-settings.jar"/>
+         <path location="/usr/share/java/plexus/utils.jar"/>
+         <path location="/usr/share/java/slf4j/api.jar"/>
+         <path location="/usr/share/java/slf4j/jcl-over-slf4j.jar"/>
+         <path location="/usr/share/java/slf4j/jul-to-slf4j.jar"/>
+         <path location="/usr/share/java/slf4j/log4j-over-slf4j.jar"/>
+         <!-- runtime -->
+         <path location="/usr/share/java/antlr.jar"/>
+         <path location="/usr/share/java/ivy.jar"/>
+         <path location="/usr/share/java/plexus/container-default.jar"/>
+         <path location="/usr/share/java/plexus/interpolation.jar"/>
+      </pathconvert>
+      <jar destfile="output/gradle-bootstrap.jar">
+         <manifest>
+            <attribute name="Main-Class" value="org.gradle.launcher.Main"/>
+            <attribute name="Class-Path" value="${class.path}"/>
+         </manifest>
+         <fileset dir="output/cli"/>
+         <fileset dir="output/core"/>
+         <fileset dir="../subprojects/core/src/main/resources"/>
+         <fileset dir="output/core-impl"/>
+         <fileset dir="output/launcher"/>
+         <fileset dir="output/native"/>
+         <fileset dir="output/plugins"/>
+         <fileset dir="../subprojects/plugins/src/main/resources">
+            <include name="META-INF/gradle-plugins/groovy.properties"/>
+            <include name="META-INF/gradle-plugins/java.properties"/>
+            <include name="META-INF/gradle-plugins/java-base.properties"/>
+            <include name="org/gradle/api/internal/tasks/testing/junit/report/style.css"/>
+         </fileset>
+         <fileset dir="src/main/resources"/>
+      </jar>
+      <!-- make it resemble a distribution -->
+      <copy todir="lib" file="output/gradle-bootstrap.jar"/>
+      <mkdir dir="lib/plugins"/>
+   </target>
+
+   <target name="clean" description="Clean output directory">
+      <delete dir="output"/>
+   </target>
+
+   <target name="cli">
+      <mkdir dir="output/cli"/>
+      <javac srcdir="../subprojects/cli/src/main/java"
+         destdir="output/cli">
+         <classpath>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="core" depends="cli,native">
+      <mkdir dir="output/core"/>
+      <copy file="../subprojects/core/src/releases.xml"
+         todir="output/core/org/gradle"/>
+      <!-- else GradleVersion  bargs -->
+      <replace file="output/core/org/gradle/releases.xml">
+         <replacefilter token="${buildTime}" value="19700101000000+0000"/>
+         <replacefilter token="${version}" value="0.0"/>
+         <replacefilter token="${releaseType}" value="bootstrap"/>
+      </replace>
+      <groovyc srcdir="../subprojects/core/src/main/groovy"
+         destdir="output/core">
+         <classpath>
+            <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-collections.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-io.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-lang.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+            <pathelement path="/usr/share/java/jakarta-commons-httpclient.jar"/>
+            <pathelement path="/usr/share/java/jansi.jar"/>
+            <pathelement path="/usr/share/java/jcip-annotations.jar"/>
+            <pathelement path="/usr/share/java/jna.jar"/>
+            <pathelement path="/usr/share/java/jnr-posix.jar"/>
+            <pathelement path="output/cli"/>
+            <pathelement path="output/native"/>
+
+            <!-- FIXME -->
+            <fileset dir="lib" includes="*.jar"/>
+         </classpath>
+         <javac/>
+      </groovyc>
+   </target>
+
+   <target name="core-impl" depends="core">
+      <mkdir dir="output/core-impl"/>
+      <groovyc srcdir="../subprojects/core-impl/src/main/groovy"
+         destdir="output/core-impl">
+         <classpath>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-io.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-lang.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+            <pathelement path="/usr/share/java/jakarta-commons-httpclient.jar"/>
+            <pathelement path="/usr/share/java/jcip-annotations.jar"/>
+            <!--pathelement path="/usr/share/java/maven/maven-core.jar"/-->
+            <pathelement path="/usr/share/java/maven2/maven-settings.jar"/>
+            <pathelement path="/usr/share/java/plexus/containers-component-annotations.jar"/>
+            <pathelement path="/usr/share/java/plexus/plexus-component-api.jar"/>
+            <pathelement path="/usr/share/java/plexus/utils.jar"/>
+            <pathelement path="output/core"/>
+            <!-- FIXME -->
+            <pathelement path="lib/wharf-core-1.0.jar"/>
+         </classpath>
+         <javac/>
+      </groovyc>
+      <!--
+      <jar destfile="output/gradle-core-impl.jar">
+         <fileset dir="output/core-impl"/>
+         <fileset dir="../subprojects/core-impl/src/main/resources"/>
+      </jar>
+      -->
+   </target>
+
+   <target name="launcher" depends="cli,core,native,tooling-api,ui">
+      <mkdir dir="output/launcher"/>
+      <javac srcdir="../subprojects/launcher/src/main/java"
+         destdir="output/launcher">
+         <classpath>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="output/cli"/>
+            <pathelement path="output/core"/>
+            <pathelement path="output/native"/>
+            <pathelement path="output/tooling-api"/>
+            <pathelement path="output/ui"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="native">
+      <mkdir dir="output/native"/>
+      <javac srcdir="../subprojects/native/src/main/java"
+         destdir="output/native">
+         <classpath>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-io.jar"/>
+            <pathelement path="/usr/share/java/jna.jar"/>
+            <pathelement path="/usr/share/java/jnr-constants.jar"/>
+            <pathelement path="/usr/share/java/jnr-posix.jar"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="open-api">
+      <mkdir dir="output/open-api"/>
+      <groovyc srcdir="../subprojects/open-api/src/main/groovy"
+         destdir="output/open-api">
+         <classpath>
+         </classpath>
+         <javac/>
+      </groovyc>
+   </target>
+
+   <target name="plugins" depends="core,wrapper">
+      <mkdir dir="output/plugins"/>
+      <groovyc srcdir="../subprojects/plugins/src/main/groovy"
+         destdir="output/plugins">
+         <classpath>
+            <pathelement path="output/core"/>
+            <pathelement path="output/wrapper"/>
+            <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-io.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-lang.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+            <pathelement path="/usr/share/java/testng.jar"/>
+         </classpath>
+         <javac/>
+      </groovyc>
+   </target>
+
+   <target name="tooling-api" depends="core,wrapper">
+      <mkdir dir="output/tooling-api"/>
+      <javac srcdir="../subprojects/tooling-api/src/main/java"
+         destdir="output/tooling-api">
+         <classpath>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="output/core"/>
+            <pathelement path="output/wrapper"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="ui" depends="cli,core,native,open-api">
+      <mkdir dir="output/ui"/>
+      <javac srcdir="../subprojects/ui/src/main/java"
+         destdir="output/ui">
+         <classpath>
+            <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
+            <pathelement path="/usr/share/java/apache-commons-io.jar"/>
+            <pathelement path="/usr/share/java/dom4j.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+            <pathelement path="output/cli"/>
+            <pathelement path="output/core"/>
+            <pathelement path="output/native"/>
+            <pathelement path="output/open-api"/>
+         </classpath>
+      </javac>
+   </target>
+
+   <target name="wrapper" depends="cli">
+      <mkdir dir="output/wrapper"/>
+      <javac srcdir="../subprojects/wrapper/src/main/java"
+         destdir="output/wrapper">
+         <classpath>
+            <pathelement path="output/cli"/>
+         </classpath>
+      </javac>
+   </target>
+
+</project>

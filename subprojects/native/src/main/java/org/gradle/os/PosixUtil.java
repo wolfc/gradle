@@ -32,7 +32,7 @@ public class PosixUtil {
     }
     
     private static class POSIXHandlerImpl implements POSIXHandler {
-        public void error(POSIX.ERRORS errors, String message) {
+        public void error(com.kenai.constantine.platform.Errno errors, String message) {
             throw new UnsupportedOperationException();
         }
 

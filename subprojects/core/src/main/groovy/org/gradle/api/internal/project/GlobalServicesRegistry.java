@@ -22,6 +22,7 @@ import org.gradle.api.internal.classpath.DefaultModuleRegistry;
 import org.gradle.api.internal.classpath.DefaultPluginModuleRegistry;
 import org.gradle.api.internal.classpath.ModuleRegistry;
 import org.gradle.api.internal.classpath.PluginModuleRegistry;
+import org.gradle.api.internal.fedora.FedoraClassPathProvider;
 import org.gradle.cache.internal.*;
 import org.gradle.cli.CommandLineConverter;
 import org.gradle.initialization.ClassLoaderRegistry;
@@ -54,7 +55,11 @@ public class GlobalServicesRegistry extends DefaultServiceRegistry {
     }
 
     protected ClassPathRegistry createClassPathRegistry() {
-        return new DefaultClassPathRegistry(new DefaultClassPathProvider(get(ModuleRegistry.class)), new DynamicModulesClassPathProvider(get(ModuleRegistry.class), get(PluginModuleRegistry.class)));
+        // TODO: pluggable
+        return new DefaultClassPathRegistry(
+                new FedoraClassPathProvider(),
+                new DefaultClassPathProvider(get(ModuleRegistry.class)),
+                new DynamicModulesClassPathProvider(get(ModuleRegistry.class), get(PluginModuleRegistry.class)));
     }
 
     protected DefaultModuleRegistry createModuleRegistry() {

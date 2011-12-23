@@ -15,7 +15,7 @@
  */
 package org.gradle.build.docs.dsl
 
-import groovyjarjarantlr.collections.AST
+import antlr.collections.AST
 import org.codehaus.groovy.antlr.AntlrASTProcessor
 import org.codehaus.groovy.antlr.SourceBuffer
 import org.codehaus.groovy.antlr.UnicodeEscapingReader

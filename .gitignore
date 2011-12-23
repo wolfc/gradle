@@ -29,3 +29,5 @@
 .DS_Store
 /performanceTest/lib
 .textmate
+/bootstrap/output
+/bootstrap/lib/gradle-bootstrap.jar
