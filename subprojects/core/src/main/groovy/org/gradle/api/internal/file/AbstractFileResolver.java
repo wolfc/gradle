@@ -166,6 +166,7 @@ public abstract class AbstractFileResolver implements FileResolver {
     }
 
     private Object convertToFileOrUri(Object path) {
+        assert path != null : "path is null";
         if (path instanceof File) {
             return path;
         }

@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 
 public class DefaultTestReport implements TestReporter {
     private final HtmlReportRenderer htmlRenderer = new HtmlReportRenderer();
@@ -34,10 +35,10 @@ public class DefaultTestReport implements TestReporter {
     private File reportDir;
 
     public DefaultTestReport() {
-        htmlRenderer.requireResource(getClass().getResource("/org/gradle/reporting/report.js"));
-        htmlRenderer.requireResource(getClass().getResource("/org/gradle/reporting/base-style.css"));
-        htmlRenderer.requireResource(getClass().getResource("/org/gradle/reporting/css3-pie-1.0beta3.htc"));
-        htmlRenderer.requireResource(getClass().getResource("style.css"));
+        htmlRenderer.requireResource(resource("/org/gradle/reporting/report.js"));
+        htmlRenderer.requireResource(resource("/org/gradle/reporting/base-style.css"));
+        htmlRenderer.requireResource(resource("/org/gradle/reporting/css3-pie-1.0beta3.htc"));
+        htmlRenderer.requireResource(resource("style.css"));
     }
 
     public void setTestResultsDir(File resultDir) {
@@ -127,5 +128,12 @@ public class DefaultTestReport implements TestReporter {
 
     private <T extends CompositeTestResults> void generatePage(T model, PageRenderer<T> renderer, File outputFile) throws Exception {
         htmlRenderer.renderer(renderer).writeTo(model, outputFile);
+    }
+
+    private URL resource(String name) {
+        final URL resource = getClass().getResource(name);
+        if (resource == null)
+            throw new IllegalArgumentException("Can't find resource " + name + " relative to " + getClass());
+        return resource;
     }
 }

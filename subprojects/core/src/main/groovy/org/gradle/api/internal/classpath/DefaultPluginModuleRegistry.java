@@ -19,6 +19,7 @@ import org.gradle.util.GUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -34,7 +35,10 @@ public class DefaultPluginModuleRegistry implements PluginModuleRegistry {
     public Set<Module> getPluginModules() {
         Set<Module> modules = new LinkedHashSet<Module>();
         Properties properties = loadPluginProperties();
-        for (String pluginModule : properties.getProperty("plugins").split(",")) {
+        final String plugins = properties.getProperty("plugins");
+        if (plugins == null)
+            return modules;
+        for (String pluginModule : plugins.split(",")) {
             try {
                 modules.add(moduleRegistry.getModule(pluginModule));
             } catch (UnknownModuleException e) {
@@ -46,6 +50,13 @@ public class DefaultPluginModuleRegistry implements PluginModuleRegistry {
     }
 
     private Properties loadPluginProperties() {
-        return GUtil.loadProperties(getClass().getResource("/gradle-plugins.properties"));
+        return GUtil.loadProperties(resource("/gradle-plugins.properties"));
+    }
+
+    private URL resource(String name) {
+        final URL resource = getClass().getResource(name);
+        if (resource == null)
+            throw new IllegalArgumentException("Can't find resource " + name + " relative to " + getClass());
+        return resource;
     }
 }

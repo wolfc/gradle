@@ -39,6 +39,8 @@ public class HtmlReportRenderer {
     private final Set<URL> resources = new HashSet<URL>();
 
     public void requireResource(URL resource) {
+        if (resource == null)
+            throw new IllegalArgumentException("resource is null");
         resources.add(resource);
     }
 

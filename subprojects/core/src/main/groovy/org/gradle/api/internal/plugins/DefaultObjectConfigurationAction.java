@@ -49,6 +49,8 @@ public class DefaultObjectConfigurationAction implements ObjectConfigurationActi
     }
 
     public ObjectConfigurationAction from(final Object script) {
+        if (script == null)
+            throw new IllegalArgumentException("script is null");
         actions.add(new Runnable() {
             public void run() {
                 applyScript(script);

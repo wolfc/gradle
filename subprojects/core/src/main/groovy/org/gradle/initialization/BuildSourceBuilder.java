@@ -102,7 +102,10 @@ public class BuildSourceBuilder {
     }
 
     static URL getDefaultScript() {
-        return BuildSourceBuilder.class.getResource(DEFAULT_BUILD_SOURCE_SCRIPT_RESOURCE);
+        final URL defaultScript = BuildSourceBuilder.class.getResource(DEFAULT_BUILD_SOURCE_SCRIPT_RESOURCE);
+        if (defaultScript == null)
+            throw new IllegalStateException("Can't find resource " + DEFAULT_BUILD_SOURCE_SCRIPT_RESOURCE + " relative to " + BuildSourceBuilder.class);
+        return defaultScript;
     }
 
     private static class BuildSrcBuildListener extends BuildAdapter {
