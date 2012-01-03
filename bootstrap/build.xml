@@ -14,6 +14,7 @@
       <classpath>
          <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
          <pathelement path="/usr/share/java/groovy.jar"/>
+         <pathelement location="/usr/share/java/commons-cli.jar"/>
       </classpath>
    </taskdef>
 
@@ -162,6 +163,7 @@
             <pathelement path="output/native"/>
             <pathelement path="output/tooling-api"/>
             <pathelement path="output/ui"/>
+            <pathelement path="/usr/share/java/guava.jar"/>
          </classpath>
       </javac>
    </target>
@@ -176,6 +178,7 @@
             <pathelement path="/usr/share/java/jna.jar"/>
             <pathelement path="/usr/share/java/jnr-constants.jar"/>
             <pathelement path="/usr/share/java/jnr-posix.jar"/>
+            <pathelement path="/usr/share/java/guava.jar"/>
          </classpath>
       </javac>
    </target>
@@ -203,6 +206,7 @@
             <pathelement path="/usr/share/java/apache-commons-lang.jar"/>
             <pathelement path="/usr/share/java/groovy.jar"/>
             <pathelement path="/usr/share/java/testng.jar"/>
+            <pathelement path="/usr/share/java/guava.jar"/>
          </classpath>
          <javac/>
       </groovyc>
