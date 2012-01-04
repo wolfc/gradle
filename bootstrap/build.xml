@@ -2,6 +2,13 @@
    vim:ts=3:sw=3:expandtab
 -->
 <project name="gradle-bootstrap" default="bootstrap">
+   <!--
+        By default Fedora ant includes all jars listed via /etc/ant.d
+        this can lead to false possitive builds. So you must invoke and
+        via a bypass.
+   -->
+   <fail message="Please invoke via build.sh" unless="bypassAntD"/>
+
    <taskdef name="groovyc"
       classname="org.codehaus.groovy.ant.Groovyc">
       <classpath>
