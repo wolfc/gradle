@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<antlib>
+    <taskdef name="groovyc"
+             classname="org.codehaus.groovy.ant.Groovyc">
+        <classpath>
+            <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
+            <pathelement path="/usr/share/java/commons-cli.jar"/>
+            <pathelement path="/usr/share/java/groovy.jar"/>
+        </classpath>
+    </taskdef>
+</antlib>

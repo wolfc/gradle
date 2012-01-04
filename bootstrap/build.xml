@@ -1,22 +1,14 @@
 <!--
    vim:ts=3:sw=3:expandtab
 -->
-<project name="gradle-bootstrap" default="bootstrap">
+<project name="gradle-bootstrap" default="bootstrap"
+   xmlns:groovyc="antlib:org.fedoraproject.groovyc">
    <!--
         By default Fedora ant includes all jars listed via /etc/ant.d
         this can lead to false possitive builds. So you must invoke and
         via a bypass.
    -->
    <fail message="Please invoke via build.sh" unless="bypassAntD"/>
-
-   <taskdef name="groovyc"
-      classname="org.codehaus.groovy.ant.Groovyc">
-      <classpath>
-         <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
-         <pathelement path="/usr/share/java/commons-cli.jar"/>
-         <pathelement path="/usr/share/java/groovy.jar"/>
-      </classpath>
-   </taskdef>
 
    <target name="bootstrap"
       description="Create gradle-bootstrap.jar"
@@ -92,7 +84,7 @@
 
    <target name="code-quality" depends="core">
       <mkdir dir="output/code-quality"/>
-      <groovyc srcdir="../subprojects/code-quality/src/main/groovy"
+      <groovyc:groovyc srcdir="../subprojects/code-quality/src/main/groovy"
          destdir="output/code-quality">
          <classpath>
             <pathelement path="output/core"/>
@@ -102,7 +94,7 @@
             <pathelement path="/usr/share/java/groovy.jar"/>
          </classpath>
          <javac/>
-      </groovyc>
+      </groovyc:groovyc>
    </target>
 
    <target name="core" depends="cli,native">
@@ -115,7 +107,7 @@
          <replacefilter token="${version}" value="0.0"/>
          <replacefilter token="${releaseType}" value="bootstrap"/>
       </replace>
-      <groovyc srcdir="../subprojects/core/src/main/groovy"
+      <groovyc:groovyc srcdir="../subprojects/core/src/main/groovy"
          destdir="output/core">
          <classpath>
             <fileset dir="/usr/share/java/objectweb-asm" includes="*.jar"/>
@@ -136,12 +128,12 @@
             <fileset dir="lib" includes="*.jar"/>
          </classpath>
          <javac/>
-      </groovyc>
+      </groovyc:groovyc>
    </target>
 
    <target name="core-impl" depends="core">
       <mkdir dir="output/core-impl"/>
-      <groovyc srcdir="../subprojects/core-impl/src/main/groovy"
+      <groovyc:groovyc srcdir="../subprojects/core-impl/src/main/groovy"
          destdir="output/core-impl">
          <classpath>
             <fileset dir="/usr/share/java/slf4j" includes="*.jar"/>
@@ -161,7 +153,7 @@
             <pathelement path="lib/wharf-core-1.0.jar"/>
          </classpath>
          <javac/>
-      </groovyc>
+      </groovyc:groovyc>
       <!--
       <jar destfile="output/gradle-core-impl.jar">
          <fileset dir="output/core-impl"/>
@@ -203,17 +195,17 @@
 
    <target name="open-api">
       <mkdir dir="output/open-api"/>
-      <groovyc srcdir="../subprojects/open-api/src/main/groovy"
+      <groovyc:groovyc srcdir="../subprojects/open-api/src/main/groovy"
          destdir="output/open-api">
          <classpath>
          </classpath>
          <javac/>
-      </groovyc>
+      </groovyc:groovyc>
    </target>
 
    <target name="plugins" depends="core,wrapper">
       <mkdir dir="output/plugins"/>
-      <groovyc srcdir="../subprojects/plugins/src/main/groovy"
+      <groovyc:groovyc srcdir="../subprojects/plugins/src/main/groovy"
          destdir="output/plugins">
          <classpath>
             <pathelement path="output/core"/>
@@ -228,7 +220,7 @@
             <pathelement path="/usr/share/java/testng.jar"/>
          </classpath>
          <javac/>
-      </groovyc>
+      </groovyc:groovyc>
    </target>
 
    <target name="tooling-api" depends="core,wrapper">

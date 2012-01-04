@@ -8,5 +8,8 @@ LOCALCLASSPATH="$(/usr/bin/build-classpath ant ant-launcher)"
 # properly in rpm mode
 LOCALCLASSPATH="$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar"
 
+# Add my own extensions
+LOCALCLASSPATH="$LOCALCLASSPATH:ant.d"
+
 # pass bypassAndD to the build script to guard proper invocation
 LOCALCLASSPATH="$LOCALCLASSPATH" exec /usr/bin/ant -DbypassAntD=true --noconfig $*
