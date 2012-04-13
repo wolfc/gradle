@@ -15,6 +15,8 @@
  */
 package org.gradle.api.internal.artifacts.mvnsettings;
 
+import org.apache.maven.execution.DefaultMavenExecutionRequest;
+import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.settings.DefaultMavenSettingsBuilder;
 import org.apache.maven.settings.MavenSettingsBuilder;
 import org.apache.maven.settings.Settings;
@@ -70,7 +72,10 @@ public class DefaultLocalMavenRepositoryLocator implements LocalMavenRepositoryL
 
     private Settings buildSettings() {
         try {
-            return createSettingsBuilder().buildSettings();
+            final MavenExecutionRequest request = new DefaultMavenExecutionRequest();
+            request.setUserSettingsFile(mavenFileLocations.getUserSettingsFile());
+            request.setGlobalSettingsFile(mavenFileLocations.getGlobalSettingsFile());
+            return createSettingsBuilder().buildSettings(request);
         } catch (Exception e) {
             throw new CannotLocateLocalMavenRepositoryException(e);
         }
@@ -79,14 +84,6 @@ public class DefaultLocalMavenRepositoryLocator implements LocalMavenRepositoryL
     private MavenSettingsBuilder createSettingsBuilder() throws Exception {
         DefaultMavenSettingsBuilder builder = new DefaultMavenSettingsBuilder();
         builder.enableLogging(new PlexusLoggerAdapter(LOGGER));
-
-        Field userSettingsFileField = DefaultMavenSettingsBuilder.class.getDeclaredField("userSettingsFile");
-        userSettingsFileField.setAccessible(true);
-        userSettingsFileField.set(builder, mavenFileLocations.getUserSettingsFile());
-
-        Field globalSettingsFileField = DefaultMavenSettingsBuilder.class.getDeclaredField("globalSettingsFile");
-        globalSettingsFileField.setAccessible(true);
-        globalSettingsFileField.set(builder, mavenFileLocations.getGlobalSettingsFile());
 
         return builder;
     }

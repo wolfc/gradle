@@ -98,4 +98,8 @@ public class PlexusLoggerAdapter implements Logger {
     public String getName() {
         return logger.getName();
     }
+
+    public void setThreshold(int t) {
+        throw new UnsupportedOperationException();
+    }
 }

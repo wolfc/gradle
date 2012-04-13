@@ -94,9 +94,11 @@ libraries.commons_httpclient = dependencies.module('org.apache.httpcomponents:ht
     dependency "org.samba.jcifs:jcifs:1.3.17"
 }
 
-libraries.maven_ant_tasks = dependencies.module("org.apache.maven:maven-ant-tasks:2.1.3") {
-    libraries.ant
+libraries.maven_core = dependencies.module("org.apache.maven:maven-core:3.0.4") {
+    dependency "org.codehaus.plexus:plexus-utils:2.0.6@jar"
 }
+libraries.maven_settings = dependencies.module("org.apache.maven:maven-settings:3.0.4")
+libraries.plexus_container_default = dependencies.module("org.codehaus.plexus:plexus-container-default:1.5.5")
 
 libraries += [
         ant_junit: 'org.apache.ant:ant-junit:1.8.2@jar',
