@@ -30,3 +30,4 @@
 .DS_Store
 /performanceTest/lib
 .textmate
+/.idea
