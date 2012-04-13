@@ -16,7 +16,6 @@
 package org.gradle.plugins.signing
 
 import org.gradle.api.artifacts.PublishArtifact
-import org.gradle.api.artifacts.maven.MavenDeployment
 import org.gradle.util.DeprecationLogger
 
 /**
@@ -61,14 +60,5 @@ class SigningPluginConvention {
         DeprecationLogger.nagUserOfReplacedMethod("sign()", "signing.sign()")
         extension.sign(closure)
     }
-    
-    /**
-     * @deprecated Use {@link SigningExtension#signPom() project.signing.signPom}
-     */
-    Signature signPom(MavenDeployment mavenDeployment, Closure closure = null) {
-        DeprecationLogger.nagUserOfReplacedMethod("signPom()", "signing.signPom()")
-        extension.signPom(mavenDeployment, closure)
-    }
-    
     
 }

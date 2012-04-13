@@ -17,10 +17,6 @@
         <extends targetClass="org.gradle.api.Project" mixinClass="org.gradle.api.plugins.quality.JavaCodeQualityPluginConvention"/>
         <extends targetClass="org.gradle.api.Project" mixinClass="org.gradle.api.plugins.quality.GroovyCodeQualityPluginConvention"/>
     </plugin>
-    <plugin id="maven" description="Maven Plugin">
-        <extends targetClass="org.gradle.api.Project" mixinClass="org.gradle.api.plugins.MavenPluginConvention"/>
-        <extends targetClass="org.gradle.api.artifacts.dsl.RepositoryHandler" mixinClass="org.gradle.api.plugins.MavenRepositoryHandlerConvention"/>
-    </plugin>
     <plugin id="war" description="War Plugin">
         <extends targetClass="org.gradle.api.Project" mixinClass="org.gradle.api.plugins.WarPluginConvention"/>
     </plugin>
